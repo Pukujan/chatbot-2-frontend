@@ -12,6 +12,7 @@ const ChatWindow = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  const prevMessagesCount = useRef(0);
 
   // Timer effect
   useEffect(() => {
@@ -33,22 +34,26 @@ const ChatWindow = () => {
     if (currentChatId) {
       dispatch(fetchMessages(currentChatId));
       setLocalMessages([]);
+      prevMessagesCount.current = 0; // Reset when chat changes
     }
   }, [currentChatId, dispatch]);
 
+  // Auto-scroll when new messages arrive
   useEffect(() => {
-    // Only auto-scroll if user hasn't manually scrolled up
-    const container = messagesContainerRef.current;
-    if (container) {
-      const isNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
-      if (isNearBottom) {
-        scrollToBottom();
-      }
+    const totalMessages = messages.length + localMessages.length;
+    if (totalMessages > prevMessagesCount.current) {
+      scrollToBottom();
     }
+    prevMessagesCount.current = totalMessages;
   }, [messages, localMessages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }, 50);
   };
 
   const handleSendMessage = async (e) => {
@@ -186,7 +191,7 @@ const ChatWindow = () => {
                 } relative`}
               >
                 {msg.reasoning && (
-                  <div className="text-xs text-gray-500 mb-1 overflow-y-scroll max-h-20">
+                  <div className="text-xs text-gray-500 mb-1 overflow-y-auto max-h-20">
                     {msg.reasoning}
                   </div>
                 )}
