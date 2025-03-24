@@ -1,14 +1,12 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ChatPage from "./pages/ChatPage";
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<ChatPage />} />
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <ChatPage />
+    </Provider>
   );
 }
 
