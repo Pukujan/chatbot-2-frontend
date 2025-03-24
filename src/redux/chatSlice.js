@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://chatbot-2-backend.onrender.com';
 
 // Async thunks
 export const fetchChats = createAsyncThunk('chat/fetchChats', async () => {
